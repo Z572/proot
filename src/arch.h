@@ -38,7 +38,7 @@ typedef unsigned char byte_t;
 #define OFFSETOF_STATX_UID 20
 #define OFFSETOF_STATX_GID 24
 
-#if !defined(ARCH_X86_64) && !defined(ARCH_ARM_EABI) && !defined(ARCH_X86) && !defined(ARCH_SH4)
+#if !defined(ARCH_X86_64) && !defined(ARCH_ARM_EABI) && !defined(ARCH_X86) && !defined(ARCH_SH4) && !defined(ARCH_RISCV64)
 #    if defined(__x86_64__)
 #        define ARCH_X86_64 1
 #    elif defined(__ARM_EABI__)
@@ -51,6 +51,8 @@ typedef unsigned char byte_t;
 #        define ARCH_X86 1
 #    elif defined(__SH4__)
 #        define ARCH_SH4 1
+#    elif defined(__riscv)
+#        define ARCH_RISCV64 1
 #    else
 #        error "Unsupported architecture"
 #    endif
@@ -170,6 +172,22 @@ typedef unsigned char byte_t;
     #define OFFSETOF_STAT_GID_32 0
     #define NO_MISALIGNED_ACCESS 1
 
+#elif defined(ARCH_RISCV64)
+    #define SYSNUMS_HEADER1 "syscall/sysnums-riscv64.h"
+    #define SYSNUMS_ABI1    sysnums_riscv64
+
+    #define SYSTRAP_SIZE 8
+
+    #define SECCOMP_ARCHS { { .value = AUDIT_ARCH_RISCV64, .nb_abis = 0, .abis = { ABI_DEFAULT } } }
+
+    #define HOST_ELF_MACHINE {115, 0, 16, 0};
+    #define RED_ZONE_SIZE 0
+    #define OFFSETOF_STAT_UID_32 0
+    #define OFFSETOF_STAT_GID_32 0
+    #define NO_MISALIGNED_ACCESS 1
+    #define EXEC_PIC_ADDRESS   0x83000000
+    #define INTERP_PIC_ADDRESS 0x80000000 /* is error */
+    #include <asm/ptrace.h>    /* user_regs_struct */
 #else
 
     #error "Unsupported architecture"

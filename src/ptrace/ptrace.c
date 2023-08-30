@@ -58,6 +58,10 @@
 #define user_fpregs_struct user_fpsimd_struct
 #endif
 
+#if defined(ARCH_RISCV64)
+#define user_fpregs_struct user_regs_struct
+#endif
+
 static const char *stringify_ptrace(PTRACE_REQUEST_TYPE request)
 {
 #define CASE_STR(a) case a: return #a; break;

@@ -37,7 +37,7 @@
 
 #include "../src/arch.h"
 
-#if !defined(ARCH_X86_64) && !defined(ARCH_ARM_EABI) && !defined(ARCH_X86) && !defined(ARCH_SH4)
+#if !defined(ARCH_X86_64) && !defined(ARCH_ARM_EABI) && !defined(ARCH_X86) && !defined(ARCH_SH4) && !defined(ARCH_RISCV64)
 #    if defined(__x86_64__)
 #        define ARCH_X86_64 1
 #    elif defined(__ARM_EABI__)
@@ -50,6 +50,8 @@
 #        define ARCH_X86 1
 #    elif defined(__SH4__)
 #        define ARCH_SH4 1
+#    elif defined(__riscv)
+#        define ARCH_RISCV64 1
 #    else
 #        error "Unsupported architecture"
 #    endif
@@ -177,6 +179,22 @@ typedef enum {
 	[INSTR_POINTER] = USER_REGS_OFFSET(pc),
     };
 
+#elif defined(ARCH_RISCV64)
+
+    #undef  USER_REGS_OFFSET
+    #define USER_REGS_OFFSET(reg_name) offsetof(struct user_regs_struct, reg_name)
+    static off_t reg_offset[] = {
+	[SYSARG_NUM]    = USER_REGS_OFFSET(regs[3]),
+	[SYSARG_1]      = USER_REGS_OFFSET(a1),
+	[SYSARG_2]      = USER_REGS_OFFSET(a2),
+	[SYSARG_3]      = USER_REGS_OFFSET(a3),
+	[SYSARG_4]      = USER_REGS_OFFSET(a4),
+	[SYSARG_5]      = USER_REGS_OFFSET(a5),
+	[SYSARG_6]      = USER_REGS_OFFSET(a6),
+	[SYSARG_RESULT] = USER_REGS_OFFSET(a0),
+	[STACK_POINTER] = USER_REGS_OFFSET(sp),
+	[INSTR_POINTER] = USER_REGS_OFFSET(pc),
+    };
 #else
 
     #error "Unsupported architecture"
