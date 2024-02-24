@@ -180,7 +180,7 @@ typedef unsigned char byte_t;
 
     #define SECCOMP_ARCHS { { .value = AUDIT_ARCH_RISCV64, .nb_abis = 0, .abis = { ABI_DEFAULT } } }
 
-    #define HOST_ELF_MACHINE {115, 0, 16, 0};
+    #define HOST_ELF_MACHINE {243, 0};
     #define RED_ZONE_SIZE 0
     #define OFFSETOF_STAT_UID_32 0
     #define OFFSETOF_STAT_GID_32 0
